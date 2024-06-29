@@ -49,7 +49,7 @@ As principais dependências do projeto incluem:
 
 ![img.png](src/main/resources/static/img.png)
 
-## Como Testar Localmente
+## Como Testar API
 
 ### Pré-requisitos
 
@@ -57,8 +57,9 @@ As principais dependências do projeto incluem:
 - ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-%23336791.svg?style=for-the-badge&logo=postgresql&logoColor=white)
 - ![IntelliJ IDEA](https://img.shields.io/badge/IntelliJ_IDEA-%23000000.svg?style=for-the-badge&logo=intellij-idea&logoColor=white) (*ou outra IDE de sua preferência*)
 
-
-### Passos para Testar Localmente
+### Testar online
+Para testar a API publicada, acesse [aqui](http://ec2-51-201-228-90.compute-1.amazonaws.com:8080/swagger-ui/index.html#/).
+### Teste Local
 
 1. **Clonar o repositório;**
 
