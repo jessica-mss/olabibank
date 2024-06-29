@@ -2,7 +2,6 @@ package br.com.olabibank.olabibank.controller;
 
 import br.com.olabibank.olabibank.exception.ContaException;
 import br.com.olabibank.olabibank.model.entity.Conta;
-import br.com.olabibank.olabibank.service.ClienteService;
 import br.com.olabibank.olabibank.service.ContaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -33,7 +31,7 @@ public class ContaController {
         try {
             contaService.create(clienteId, contaRequestBody);
             return new ResponseEntity<>(HttpStatus.CREATED);
-        } catch (ContaException.DuplicateContaException e) {
+        } catch (ContaException.ContasDuplicadasException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -47,7 +45,7 @@ public class ContaController {
         try {
             Conta conta = contaService.findById(id);
             return new ResponseEntity<>(conta, HttpStatus.OK);
-        } catch (ContaException.ContaNotFoundException e) {
+        } catch (ContaException.ContaNaoEncontradaException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
@@ -59,9 +57,9 @@ public class ContaController {
         try {
             Conta conta = contaService.depositar(contaId, valorDeposito);
             return new ResponseEntity<>(conta, HttpStatus.OK);
-        } catch (ContaException.ContaNotFoundException e) {
+        } catch (ContaException.ContaNaoEncontradaException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (ContaException.InvalidValueException e) {
+        } catch (ContaException.SaldoInsuficienteException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -73,9 +71,9 @@ public class ContaController {
         try {
             contaService.sacar(contaId, valorSaque);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (ContaException.ContaNotFoundException e) {
+        } catch (ContaException.ContaNaoEncontradaException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (ContaException.InvalidValueException e) {
+        } catch (ContaException.SaldoInsuficienteException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -87,9 +85,9 @@ public class ContaController {
         try {
             contaService.transferir(contaOrigemId, contaDestinoId, valorTransferencia);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (ContaException.ContaNotFoundException e) {
+        } catch (ContaException.ContaNaoEncontradaException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (ContaException.InvalidValueException e) {
+        } catch (ContaException.SaldoInsuficienteException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -101,9 +99,9 @@ public class ContaController {
         try {
             contaService.pagar(contaId, valorPagamento);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (ContaException.ContaNotFoundException e) {
+        } catch (ContaException.ContaNaoEncontradaException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (ContaException.InvalidValueException e) {
+        } catch (ContaException.SaldoInsuficienteException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -115,7 +113,7 @@ public class ContaController {
         try {
             double saldo = contaService.getSaldo(contaId);
             return new ResponseEntity<>(saldo, HttpStatus.OK);
-        } catch (ContaException.ContaNotFoundException e) {
+        } catch (ContaException.ContaNaoEncontradaException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
@@ -127,7 +125,7 @@ public class ContaController {
         try {
             contaService.atualizarConta(contaId, requestBody);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (ContaException.ContaNotFoundException e) {
+        } catch (ContaException.ContaNaoEncontradaException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);

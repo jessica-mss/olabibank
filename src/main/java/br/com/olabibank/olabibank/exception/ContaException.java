@@ -6,21 +6,27 @@ public class ContaException extends RuntimeException {
         super(message);
     }
 
-    public static class DuplicateContaException extends ContaException{
-        public DuplicateContaException(){
+    public static class ContasDuplicadasException extends ContaException{
+        public ContasDuplicadasException(){
             super("Cliente já tem uma conta cadastrada");
         }
     }
 
-    public static class ContaNotFoundException extends ContaException {
-        public ContaNotFoundException() {
+    public static class ContaNaoEncontradaException extends ContaException {
+        public ContaNaoEncontradaException() {
             super("Conta não encontrada");
         }
     }
 
-    public static class InvalidValueException extends ContaException {
-        public InvalidValueException() {
+    public static class ValorInvalidoException extends ContaException {
+        public ValorInvalidoException() {
             super("O valor deve ser maior que zero.");
+        }
+    }
+
+    public static class SaldoInsuficienteException extends ContaException {
+        public SaldoInsuficienteException() {
+            super("O saldo em conta é insuficiente para esta transação");
         }
     }
 }

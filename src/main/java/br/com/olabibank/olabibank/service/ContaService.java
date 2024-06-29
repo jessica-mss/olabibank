@@ -4,18 +4,13 @@ import br.com.olabibank.olabibank.exception.ClienteException;
 import br.com.olabibank.olabibank.exception.ContaException;
 import br.com.olabibank.olabibank.model.entity.Cliente;
 import br.com.olabibank.olabibank.model.entity.Conta;
-import br.com.olabibank.olabibank.model.enums.TipoConta;
 import br.com.olabibank.olabibank.repository.ClienteRepository;
 import br.com.olabibank.olabibank.repository.ContaRepository;
-import br.com.olabibank.olabibank.util.ContaNumeroGenerator;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -38,7 +33,7 @@ public class ContaService {
             conta.setCliente(cliente);
             return contaRepository.save(conta);
         }
-        throw new ContaException.DuplicateContaException();
+        throw new ContaException.ContasDuplicadasException();
     }
 
     public Conta findById (UUID id){
@@ -57,21 +52,24 @@ public class ContaService {
     }
 
     public Conta sacar(UUID contaId, double valorSaque) {
+        Conta conta = findContaByIdOrThrowException(contaId);
 
         validarValorPositivo(valorSaque);
 
-        Conta conta = findContaByIdOrThrowException(contaId);
-
         validarSaldoSuficiente(conta.getSaldo(), valorSaque);
 
-            double novoSaldo = conta.getSaldo() - valorSaque;
-            conta.setSaldo(novoSaldo);
+        int saquesRestantesGratuitos = conta.getSaquesGratuitos();
+        double taxaSaque = 0.0;
 
-            if (conta.getSaquesGratuitos() > 0) {
-                conta.setSaquesGratuitos(conta.getSaquesGratuitos() - 1);
-            }
-            return contaRepository.save(conta);
+        if (saquesRestantesGratuitos > 0) {
+            conta.setSaquesGratuitos(saquesRestantesGratuitos - 1);
+        } else {
+            taxaSaque = 6.50;
+        }
+        double novoSaldo = conta.getSaldo() - valorSaque - taxaSaque;
+        conta.setSaldo(novoSaldo);
 
+        return contaRepository.save(conta);
     }
 
     public void transferir(UUID contaOrigemId, UUID contaDestinoId, double valorTransferencia) {
@@ -136,18 +134,18 @@ public class ContaService {
 
     private Conta findContaByIdOrThrowException (UUID id){
         return contaRepository.findById(id)
-                .orElseThrow(() -> new ContaException.ContaNotFoundException());
+                .orElseThrow(() -> new ContaException.ContaNaoEncontradaException());
     }
 
     private void validarValorPositivo(double valor) {
         if (valor <= 0) {
-            throw new ContaException.InvalidValueException();
+            throw new ContaException.SaldoInsuficienteException();
         }
     }
 
     private void validarSaldoSuficiente(double saldo, double valor) {
         if (saldo < valor) {
-            throw new ContaException.InvalidValueException();
+            throw new ContaException.SaldoInsuficienteException();
         }
     }
 }
