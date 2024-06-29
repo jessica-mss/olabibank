@@ -1,2 +1,8 @@
-package br.com.olabibank.olabibank.config;public class SwaggerConfig {
+package br.com.olabibank.olabibank.config;
+
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class SwaggerConfig {
 }
+

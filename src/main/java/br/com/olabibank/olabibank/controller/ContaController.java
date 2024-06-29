@@ -106,7 +106,7 @@ public class ContaController {
         }
     }
 
-    @GetMapping("/saldo/{contaId}")
+    @GetMapping("/{contaId}/saldo")
     public ResponseEntity<Object> getSaldo(@PathVariable UUID contaId) {
         log.info("Executing getSaldo");
 
