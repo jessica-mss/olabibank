@@ -12,5 +12,5 @@ public class OlabibankApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(OlabibankApplication.class, args);
 	}
-
 }
+
