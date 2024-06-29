@@ -41,6 +41,15 @@ As principais dependências do projeto incluem:
 
 ## Endpoints da API
 
+A documentação da API está localizada no seguinte caminho no repositório:
+
+📂 `src`
+&nbsp;&nbsp;&nbsp;&nbsp;📂 `main`
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;📂 `resources`
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;📄 `api-swagger-documentation.yaml`
+
+*Para melhor visualização copie o arquivo e use no: [editor.swagger.io](https://editor.swagger.io/)*
+
 ### Clientes
 
 ![img_1.png](src/main/resources/static/img_1.png)
