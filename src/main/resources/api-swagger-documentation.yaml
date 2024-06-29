@@ -1,0 +1,338 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: http://localhost:8080
+  description: Generated server url
+paths:
+  /api/contas/{clienteId}/criar:
+    post:
+      tags:
+      - conta-controller
+      operationId: createConta
+      parameters:
+      - name: clienteId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Conta"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Conta"
+  /api/contas/transferir:
+    post:
+      tags:
+      - conta-controller
+      operationId: transferir
+      parameters:
+      - name: contaOrigemId
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: contaDestinoId
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: valorTransferencia
+        in: query
+        required: true
+        schema:
+          type: number
+          format: double
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/contas/sacar:
+    post:
+      tags:
+      - conta-controller
+      operationId: sacar
+      parameters:
+      - name: contaId
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: valorSaque
+        in: query
+        required: true
+        schema:
+          type: number
+          format: double
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/contas/pagar:
+    post:
+      tags:
+      - conta-controller
+      operationId: pagar
+      parameters:
+      - name: contaId
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: valorPagamento
+        in: query
+        required: true
+        schema:
+          type: number
+          format: double
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/contas/depositar:
+    post:
+      tags:
+      - conta-controller
+      operationId: depositar
+      parameters:
+      - name: contaId
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: valorDeposito
+        in: query
+        required: true
+        schema:
+          type: number
+          format: double
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/clientes/criar:
+    post:
+      tags:
+      - cliente-controller
+      operationId: createCliente
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Cliente"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/contas/{contaId}:
+    patch:
+      tags:
+      - conta-controller
+      operationId: atualizarConta
+      parameters:
+      - name: contaId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: object
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/clientes/{id}:
+    get:
+      tags:
+      - cliente-controller
+      operationId: getClienteById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+    patch:
+      tags:
+      - cliente-controller
+      operationId: updateCliente
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: object
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/contas/{id}:
+    get:
+      tags:
+      - conta-controller
+      operationId: getContaById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/contas/saldo/{contaId}:
+    get:
+      tags:
+      - conta-controller
+      operationId: getSaldo
+      parameters:
+      - name: contaId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/clientes:
+    get:
+      tags:
+      - cliente-controller
+      operationId: getAllClientes
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Cliente"
+components:
+  schemas:
+    Cliente:
+      type: object
+      properties:
+        nome:
+          type: string
+        cpf:
+          type: string
+        email:
+          type: string
+        endereco:
+          $ref: "#/components/schemas/Endereco"
+        rendaSalarial:
+          type: number
+          format: double
+        conta:
+          $ref: "#/components/schemas/Conta"
+        id:
+          type: string
+          format: uuid
+    Conta:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        tipo:
+          type: string
+          enum:
+          - PAGAMENTO
+          - CORRENTE
+        agencia:
+          type: string
+        numeroConta:
+          type: string
+        saldo:
+          type: number
+          format: double
+        saquesGratuitos:
+          type: integer
+          format: int32
+        cliente:
+          $ref: "#/components/schemas/Cliente"
+    Endereco:
+      type: object
+      properties:
+        rua:
+          type: string
+        numero:
+          type: string
+        cidade:
+          type: string
+        estado:
+          type: string
+        cep:
+          type: string
